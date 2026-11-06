@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#f6f7f1" />
+  <title>山岚冷泡茶｜轻资产网店运营模拟</title>
+  <style>
+    :root {
+      --ink: #20352d;
+      --muted: #748078;
+      --green: #355d4a;
+      --lime: #d7ed9b;
+      --paper: #f6f7f1;
+      --white: #fff;
+      --line: #e6e9df;
+      --orange: #e89556;
+      --shadow: 0 16px 42px rgba(39, 62, 47, .08);
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+        "Microsoft YaHei", sans-serif;
+      line-height: 1.6;
+    }
+    a { color: inherit; text-decoration: none; }
+    button, input { font: inherit; }
+    .wrap { width: min(1120px, calc(100% - 40px)); margin: auto; }
+
+    header {
+      height: 72px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--line);
+    }
+    .brand { display: flex; align-items: center; gap: 10px; font-weight: 800; }
+    .brand-mark {
+      width: 34px; height: 34px; display: grid; place-items: center;
+      border-radius: 12px; background: var(--green); color: white; font-size: 19px;
+    }
+    nav { display: flex; gap: 26px; color: var(--muted); font-size: 14px; }
+    nav a:hover { color: var(--green); }
+    .nav-cta {
+      background: var(--green); color: white; padding: 10px 17px;
+      border-radius: 999px; font-size: 14px;
+    }
+
+    .hero {
+      min-height: 460px; display: grid; grid-template-columns: 1.08fr .92fr;
+      gap: 40px; align-items: center; padding: 55px 0 46px;
+    }
+    .eyebrow {
+      display: inline-flex; gap: 8px; align-items: center; color: var(--green);
+      background: #eaf0df; border-radius: 999px; padding: 7px 12px;
+      font-size: 12px; font-weight: 700; letter-spacing: .04em;
+    }
+    h1 { font-size: clamp(42px, 6vw, 68px); line-height: 1.08; letter-spacing: -.05em; margin: 20px 0; }
+    h1 span { color: var(--green); }
+    .hero-copy { max-width: 520px; color: var(--muted); font-size: 16px; }
+    .hero-actions { display: flex; align-items: center; gap: 20px; margin-top: 27px; }
+    .button {
+      display: inline-block; border: 0; cursor: pointer; border-radius: 999px;
+      background: var(--green); color: white; padding: 13px 22px; font-weight: 700;
+    }
+    .text-link { font-size: 14px; font-weight: 700; color: var(--green); }
+    .hero-art {
+      min-height: 345px; border-radius: 28px; position: relative; overflow: hidden;
+      background: radial-gradient(circle at 75% 25%, #f5f4ce 0 12%, transparent 13%),
+        linear-gradient(140deg, #dce8c8, #b8d0b4 60%, #8da98d);
+      display: grid; place-items: center;
+    }
+    .hero-art::before, .hero-art::after {
+      content: ""; position: absolute; border-radius: 50%; background: rgba(255,255,255,.2);
+    }
+    .hero-art::before { width: 280px; height: 280px; left: -90px; bottom: -130px; }
+    .hero-art::after { width: 180px; height: 180px; right: -60px; top: 45px; }
+    .hero-bottle { width: 200px; height: 295px; position: relative; z-index: 1; transform: rotate(7deg); }
+    .hero-note {
+      position: absolute; z-index: 2; right: 22px; bottom: 20px;
+      background: rgba(255,255,255,.84); padding: 12px 15px; border-radius: 15px;
+      font-size: 12px; color: var(--muted);
+    }
+    .hero-note strong { display: block; color: var(--ink); font-size: 15px; }
+
+    section { padding: 46px 0; }
+    .section-head {
+      display: flex; align-items: end; justify-content: space-between; gap: 20px;
+      margin-bottom: 22px;
+    }
+    .section-head h2 { font-size: 30px; letter-spacing: -.035em; margin: 0; }
+    .section-head p { color: var(--muted); margin: 5px 0 0; font-size: 14px; }
+    .tag { color: var(--green); background: #eaf0df; padding: 5px 10px; border-radius: 999px; font-size: 12px; }
+
+    .products { display: grid; grid-template-columns: repeat(5, 1fr); gap: 14px; }
+    .product {
+      background: var(--white); border: 1px solid var(--line); border-radius: 20px;
+      overflow: hidden; box-shadow: 0 6px 20px rgba(39,62,47,.03);
+      transition: transform .2s, box-shadow .2s;
+    }
+    .product:hover { transform: translateY(-4px); box-shadow: var(--shadow); }
+    .product-art { height: 185px; display: grid; place-items: center; }
+    .product-art svg { width: 112px; height: 160px; }
+    .product-info { padding: 15px; }
+    .product-top { display: flex; align-items: center; justify-content: space-between; }
+    .product h3 { margin: 0; font-size: 17px; }
+    .product .desc { color: var(--muted); font-size: 12px; min-height: 38px; margin: 7px 0 12px; }
+    .price { color: var(--green); font-size: 20px; font-weight: 800; }
+    .price small { font-size: 11px; font-weight: 500; color: var(--muted); }
+    .add {
+      border: 1px solid var(--line); color: var(--green); background: white;
+      width: 30px; height: 30px; border-radius: 50%; cursor: pointer; font-size: 18px;
+    }
+
+    .feature-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+    .feature {
+      padding: 21px; border-radius: 18px; background: #fff; border: 1px solid var(--line);
+    }
+    .feature-icon { font-size: 22px; }
+    .feature h3 { margin: 10px 0 5px; font-size: 16px; }
+    .feature p { color: var(--muted); font-size: 13px; margin: 0; }
+
+    .ops {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 18px; align-items: stretch;
+    }
+    .panel {
+      background: white; border: 1px solid var(--line); border-radius: 20px;
+      padding: 23px; box-shadow: 0 6px 20px rgba(39,62,47,.03);
+    }
+    .panel h3 { margin: 0 0 14px; font-size: 19px; }
+    .steps { display: grid; gap: 13px; }
+    .step { display: grid; grid-template-columns: 32px 1fr; gap: 12px; }
+    .step-num {
+      width: 30px; height: 30px; border-radius: 10px; display: grid; place-items: center;
+      background: #eaf0df; color: var(--green); font-weight: 800; font-size: 13px;
+    }
+    .step strong { display: block; font-size: 14px; }
+    .step span { color: var(--muted); font-size: 12px; }
+
+    .table-wrap { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    th, td { padding: 11px 9px; text-align: left; border-bottom: 1px solid var(--line); white-space: nowrap; }
+    th { color: var(--muted); font-weight: 600; font-size: 12px; }
+    td strong { color: var(--green); }
+    .small-note { color: var(--muted); font-size: 11px; margin: 12px 0 0; }
+
+    .finance {
+      background: var(--green); color: white; border-radius: 25px; padding: 28px;
+      display: grid; grid-template-columns: 1.1fr .9fr; gap: 25px;
+    }
+    .finance h2 { margin: 0 0 7px; font-size: 28px; }
+    .finance .intro { color: #d5e0d4; font-size: 13px; margin: 0 0 20px; }
+    .input-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+    .input-row label { font-size: 13px; color: #e0e9dc; }
+    .input-row input {
+      width: 105px; border: 1px solid rgba(255,255,255,.28); background: rgba(255,255,255,.1);
+      color: white; border-radius: 10px; padding: 9px 10px; outline: none;
+    }
+    .input-row input:focus { border-color: var(--lime); }
+    .finance-metrics { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .metric { padding: 15px; background: rgba(255,255,255,.09); border-radius: 15px; }
+    .metric span { display: block; color: #d5e0d4; font-size: 11px; }
+    .metric strong { display: block; font-size: 23px; margin-top: 3px; }
+    .breakdown { background: white; color: var(--ink); padding: 20px; border-radius: 17px; }
+    .breakdown h3 { margin: 0 0 10px; font-size: 16px; }
+    .cost-line { display: flex; justify-content: space-between; padding: 7px 0; font-size: 12px; border-bottom: 1px solid var(--line); }
+    .cost-line:last-child { border: 0; font-weight: 800; font-size: 14px; padding-top: 11px; }
+    .cost-line span:last-child { font-variant-numeric: tabular-nums; }
+
+    .channels { display: grid; grid-template-columns: repeat(4, 1fr); gap: 13px; }
+    .channel { background: white; border: 1px solid var(--line); border-radius: 17px; padding: 17px; }
+    .channel b { display: block; margin: 7px 0 4px; font-size: 14px; }
+    .channel span { color: var(--muted); font-size: 12px; }
+
+    .notice {
+      background: #fff7e8; color: #76512c; border: 1px solid #f0dfc2;
+      border-radius: 15px; padding: 15px 17px; font-size: 12px;
+    }
+    footer { border-top: 1px solid var(--line); margin-top: 36px; padding: 25px 0 35px; color: var(--muted); font-size: 12px; }
+    .footer-row { display: flex; justify-content: space-between; gap: 20px; flex-wrap: wrap; }
+
+    @media (max-width: 850px) {
+      .products { grid-template-columns: repeat(3, 1fr); }
+      .hero { gap: 20px; }
+      .channels { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 620px) {
+      .wrap { width: min(100% - 28px, 520px); }
+      nav { display: none; }
+      .hero { grid-template-columns: 1fr; padding-top: 38px; }
+      .hero-art { min-height: 290px; }
+      .hero-bottle { height: 245px; }
+      .products { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+      .product-art { height: 150px; }
+      .product-art svg { height: 132px; }
+      .section-head { align-items: start; flex-direction: column; }
+      .ops, .finance { grid-template-columns: 1fr; }
+      .feature-grid { grid-template-columns: 1fr; }
+      .finance { padding: 20px; }
+    }
+  </style>
+</head>
+<body>
+  <header class="wrap">
+    <a class="brand" href="#" aria-label="山岚冷泡茶首页">
+      <span class="brand-mark">山</span>
+      <span>山岚冷泡茶</span>
+    </a>
+    <nav>
+      <a href="#products">产品系列</a>
+      <a href="#story">产品优势</a>
+      <a href="#operations">运营流程</a>
+      <a href="#finance">盈利测算</a>
+    </nav>
+    <a class="nav-cta" href="#products">选一瓶冷泡茶 ↗</a>
+  </header>
+
+  <main>
+    <section class="wrap hero">
+      <div>
+        <span class="eyebrow">🍃 轻盈茶香 · 冷泡即饮</span>
+        <h1>把一口好茶，<br /><span>泡进日常。</span></h1>
+        <p class="hero-copy">
+          以茶叶风味为灵感设计的冷泡茶系列。玫瑰、茉莉、乌龙、毛尖与蜜桃五种口味，
+          为通勤、学习和轻食时刻提供清爽选择。
+        </p>
+        <div class="hero-actions">
+          <a class="button" href="#products">探索五种风味</a>
+          <a class="text-link" href="#finance">查看经营测算 ↓</a>
+        </div>
+      </div>
+      <div class="hero-art" aria-label="冷泡茶瓶装插画">
+        <svg class="hero-bottle" viewBox="0 0 200 300" role="img" aria-label="山岚冷泡茶瓶子插画">
+          <defs>
+            <linearGradient id="tea" x1="0" x2="1" y1="0" y2="1">
+              <stop offset="0" stop-color="#f2dfa2"/>
+              <stop offset="1" stop-color="#c5a85e"/>
+            </linearGradient>
+          </defs>
+          <rect x="76" y="12" width="48" height="28" rx="8" fill="#355d4a"/>
+          <path d="M72 38h56v25c0 12 20 24 20 43v154c0 18-12 28-29 28H81c-17 0-29-10-29-28V106c0-19 20-31 20-43z" fill="#eff3db" stroke="#fff" stroke-width="5"/>
+          <path d="M59 139h82v120c0 10-7 17-17 17H76c-10 0-17-7-17-17z" fill="url(#tea)" opacity=".88"/>
+          <rect x="62" y="103" width="76" height="97" rx="15" fill="#355d4a"/>
+          <text x="100" y="135" text-anchor="middle" fill="#d7ed9b" font-size="12" font-weight="700">山岚</text>
+          <text x="100" y="158" text-anchor="middle" fill="white" font-size="17" font-weight="700">冷泡茶</text>
+          <text x="100" y="178" text-anchor="middle" fill="#dce8c8" font-size="9">COLD BREW TEA</text>
+          <path d="M82 220c9-15 18-15 27 0-9 10-18 10-27 0z" fill="#6d8d62"/>
+          <path d="M109 220c8-12 14-12 22 0-8 9-14 9-22 0z" fill="#91aa71"/>
+        </svg>
+        <div class="hero-note"><strong>五种茶香</strong>为日常补充轻松一刻</div>
+      </div>
+    </section>
+
+    <section class="wrap" id="products">
+      <div class="section-head">
+        <div>
+          <h2>五种风味，选你所爱</h2>
+          <p>每瓶 500 ml｜示例零售价，商品图片为页面内绘制的风味插画</p>
+        </div>
+        <span class="tag">模拟商品展示</span>
+      </div>
+      <div class="products" id="product-list"></div>
+    </section>
+
+    <section class="wrap" id="story">
+      <div class="section-head">
+        <div>
+          <h2>产品优势与定位</h2>
+          <p>从商品组合、页面表达和小批量测试建立轻资产经营逻辑。</p>
+        </div>
+      </div>
+      <div class="feature-grid">
+        <article class="feature">
+          <span class="feature-icon">🌿</span>
+          <h3>五味组合，满足多种偏好</h3>
+          <p>花香、茶香与果香兼顾，先用小批量观察口味偏好，再调整补货比例。</p>
+        </article>
+        <article class="feature">
+          <span class="feature-icon">📦</span>
+          <h3>轻库存、小步试销</h3>
+          <p>前期采用小批量采购与预售/拼单测试，减少一次性压货和临期风险。</p>
+        </article>
+        <article class="feature">
+          <span class="feature-icon">📱</span>
+          <h3>内容带动复购</h3>
+          <p>用口味测评、冷泡搭配和组合装内容触达顾客，积累评价与复购用户。</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="wrap" id="operations">
+      <div class="section-head">
+        <div>
+          <h2>从进货到出货</h2>
+          <p>模拟小型食品网店的日常运营与库存管理。</p>
+        </div>
+      </div>
+      <div class="ops">
+        <article class="panel">
+          <h3>运营流程</h3>
+          <div class="steps">
+            <div class="step"><span class="step-num">01</span><div><strong>选供应商与核验商品</strong><span>索取报价、样品及资质资料；核对配料、净含量、生产日期、保质期和储存条件。</span></div></div>
+            <div class="step"><span class="step-num">02</span><div><strong>下单进货与验收入库</strong><span>按销售预测分口味下单；收货时检查外包装、批次、数量、日期和运输状态，异常批次先隔离。</span></div></div>
+            <div class="step"><span class="step-num">03</span><div><strong>上架、接单与拣货</strong><span>页面展示真实标签信息；订单按“先到期先出”（FEFO）拣货，复核口味、数量和包装。</span></div></div>
+            <div class="step"><span class="step-num">04</span><div><strong>发货、售后与盘点</strong><span>记录物流和批次；处理破损、漏液、错发及顾客反馈；每日核对实物库存与订单库存。</span></div></div>
+          </div>
+        </article>
+        <article class="panel">
+          <h3>商品属性与库存卡（模拟）</h3>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>口味</th><th>规格</th><th>模拟进价</th><th>售价</th><th>首批库存</th><th>补货点</th></tr></thead>
+              <tbody id="inventory-rows"></tbody>
+            </table>
+          </div>
+          <p class="small-note">补货点按约 7 天预计销量设置；未达到补货点前结合供应商交期复核。首批库存按每种 100 瓶演示。</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="wrap">
+      <div class="section-head">
+        <div>
+          <h2>库存、损耗与食品安全</h2>
+          <p>食品经营必须以实际产品标签、供应商信息和适用要求为准。</p>
+        </div>
+      </div>
+      <div class="ops">
+        <article class="panel">
+          <h3>盘点与补货规则</h3>
+          <div class="steps">
+            <div class="step"><span class="step-num">A</span><div><strong>每天登记出入库</strong><span>记录 SKU、数量、批次、生产日期、到期日、订单号和经手人；账实不符时暂停该 SKU 出货并复核。</span></div></div>
+            <div class="step"><span class="step-num">B</span><div><strong>每周做一次批次盘点</strong><span>优先销售较早到期批次；依据近 7–14 天销量调整下一批采购，避免口味结构失衡。</span></div></div>
+            <div class="step"><span class="step-num">C</span><div><strong>临期与坏品分开处理</strong><span>发现破损、胀包、漏液或储存异常立即隔离并停止销售；按供应商约定退换或报损，留存记录，不售卖不合格商品。</span></div></div>
+          </div>
+        </article>
+        <article class="panel">
+          <h3>保质期管理（需到货核实）</h3>
+          <p style="font-size:13px;color:var(--muted);margin:0 0 12px">
+            本方案不虚构具体保质期：下单前应向供应商确认每个 SKU 的保质期、剩余保质期要求、储存条件和运输条件，并以产品标签为准。
+          </p>
+          <div class="notice">
+            上架时录入生产批次和到期日期；可设置内部预警线，例如“剩余保质期低于总保质期的 1/3 或 30 天（以较早触发者为准）”时停止常规补货并评估处理方案。该预警仅为模拟管理规则，不替代法律要求或标签说明。
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="wrap" id="finance">
+      <div class="finance">
+        <div>
+          <h2>月度盈利测算</h2>
+          <p class="intro">
+            可修改月销量进行情景测算。默认按下方五种口味销量组合，金额为人民币；所有数字为课程模拟假设。
+          </p>
+          <div class="input-row">
+            <label for="units">月销售总瓶数</label>
+            <input id="units" type="number" min="0" step="50" value="800" />
+            <label>平台/支付费率 5% · 物流补贴 ¥1.50/瓶 · 推广 ¥0.80/瓶</label>
+          </div>
+          <div class="finance-metrics" style="margin-top:18px">
+            <div class="metric"><span>模拟月销售额</span><strong id="revenue">¥0</strong></div>
+            <div class="metric"><span>模拟月净利润*</span><strong id="profit">¥0</strong></div>
+            <div class="metric"><span>经营盈亏平衡销量</span><strong id="break-even">约 0 瓶</strong></div>
+            <div class="metric"><span>一次性启动费用回收</span><strong id="payback">约 0 个月</strong></div>
+          </div>
+          <p style="color:#d5e0d4;font-size:11px;margin:13px 0 0">
+            *未计税费、人工工资、退货差异和实际融资成本；净利润为稳态月度模拟值。请勿将预测当作实际收益承诺。
+          </p>
+        </div>
+        <div class="breakdown">
+          <h3>默认情景：月销 800 瓶</h3>
+          <div class="cost-line"><span>销售额</span><span id="b-revenue">¥0</span></div>
+          <div class="cost-line"><span>已售商品进货成本</span><span id="b-cogs">−¥0</span></div>
+          <div class="cost-line"><span>平台及支付费用（5%）</span><span id="b-platform">−¥0</span></div>
+          <div class="cost-line"><span>物流补贴（¥1.50/瓶）</span><span id="b-shipping">−¥0</span></div>
+          <div class="cost-line"><span>促销推广（¥0.80/瓶）</span><span id="b-promo">−¥0</span></div>
+          <div class="cost-line"><span>库存损耗准备（商品成本约 3%）</span><span id="b-loss">−¥0</span></div>
+          <div class="cost-line"><span>固定经营费用（每月）</span><span>−¥1,800</span></div>
+          <div class="cost-line"><span>模拟月净利润</span><span id="b-profit">¥0</span></div>
+        </div>
+      </div>
+      <p class="small-note">
+        启动资金示例：一次性页面/拍摄/物料等费用 ¥2,500；首批 500 瓶库存约 ¥2,210；另预留运营现金，建议总准备金约 ¥7,000。库存采购款属于周转资金，不应重复作为当月已售商品成本扣除。
+        默认销售组合为玫瑰 180、茉莉 160、乌龙 150、毛尖 140、蜜桃 170 瓶；经营盈亏平衡销量按平均单瓶贡献毛利估算。
+      </p>
+    </section>
+
+    <section class="wrap">
+      <div class="section-head">
+        <div>
+          <h2>销售渠道与轻资产启动</h2>
+          <p>先验证需求，再逐步扩大库存与投入。</p>
+        </div>
+      </div>
+      <div class="channels">
+        <article class="channel"><span>01 · 内容触达</span><b>短视频 / 社群</b><span>发布口味测评、搭配场景与新品试饮内容，收集意向。</span></article>
+        <article class="channel"><span>02 · 交易承接</span><b>电商店铺 / 小程序</b><span>统一商品信息、价格、订单和售后记录，减少漏单。</span></article>
+        <article class="channel"><span>03 · 组合促销</span><b>五味尝鲜装</b><span>用组合装测试偏好；测算折扣后仍覆盖商品和履约成本。</span></article>
+        <article class="channel"><span>04 · 复购运营</span><b>会员 / 回购提醒</b><span>基于真实订单和顾客同意进行回访，观察复购与差评原因。</span></article>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap footer-row">
+      <span>© 山岚冷泡茶 · 食品网店运营模拟作业</span>
+      <span>虚拟品牌与经营数据，仅用于课程展示，不构成真实销售或投资建议。</span>
+    </div>
+  </footer>
+
+  <script>
+    const products = [
+      { name: "玫瑰冷泡茶", short: "玫瑰", price: 12.9, cost: 4.2, sold: 180, color: "#e7b5b1", bg: "#f8e9e6", icon: "✿", desc: "清柔花香，适合轻松下午。" },
+      { name: "茉莉冷泡茶", short: "茉莉", price: 12.9, cost: 4.0, sold: 160, color: "#d7e4a6", bg: "#eff3df", icon: "❋", desc: "清新花香，入口轻盈。" },
+      { name: "乌龙冷泡茶", short: "乌龙", price: 13.9, cost: 4.5, sold: 150, color: "#c5a174", bg: "#f1e8da", icon: "◈", desc: "醇和茶韵，搭配餐食。" },
+      { name: "毛尖冷泡茶", short: "毛尖", price: 14.9, cost: 4.8, sold: 140, color: "#a9c48b", bg: "#e7efdf", icon: "⌁", desc: "清雅茶香，口感清爽。" },
+      { name: "蜜桃冷泡茶", short: "蜜桃", price: 13.9, cost: 4.6, sold: 170, color: "#efb47f", bg: "#fbecdf", icon: "●", desc: "桃果风味，甜润轻松。" }
+    ];
+
+    function bottleSvg(p) {
+      return `<svg viewBox="0 0 120 170" role="img" aria-label="${p.name}插画">
+        <rect x="45" y="5" width="30" height="17" rx="5" fill="#355d4a"/>
+        <path d="M42 20h36v15c0 8 12 15 12 28v83c0 10-7 15-17 15H47c-10 0-17-5-17-15V63c0-13 12-20 12-28z"
+          fill="#fffdf3" stroke="white" stroke-width="3"/>
+        <path d="M33 87h54v56c0 7-5 11-11 11H44c-6 0-11-4-11-11z" fill="${p.color}" opacity=".72"/>
+        <rect x="34" y="55" width="52" height="61" rx="10" fill="#355d4a"/>
+        <text x="60" y="76" text-anchor="middle" fill="#d7ed9b" font-size="8" font-weight="700">山岚</text>
+        <text x="60" y="94" text-anchor="middle" fill="white" font-size="11" font-weight="700">冷泡茶</text>
+        <text x="60" y="106" text-anchor="middle" fill="#e1eadc" font-size="6">500 ml</text>
+        <text x="60" y="139" text-anchor="middle" fill="#355d4a" font-size="17">${p.icon}</text>
+      </svg>`;
+    }
+
+    document.getElementById("product-list").innerHTML = products.map(p => `
+      <article class="product">
+        <div class="product-art" style="background:${p.bg}">${bottleSvg(p)}</div>
+        <div class="product-info">
+          <div class="product-top"><h3>${p.name}</h3><button class="add" aria-label="加入购物车：${p.name}" onclick="alert('模拟操作：已将${p.name}加入购物车')">+</button></div>
+          <p class="desc">${p.desc}</p>
+          <div class="price">¥${p.price.toFixed(1)} <small>/ 500 ml</small></div>
+        </div>
+      </article>
+    `).join("");
+
+    document.getElementById("inventory-rows").innerHTML = products.map(p => {
+      const reorder = Math.ceil(p.sold / 30 * 7);
+      return `<tr>
+        <td><strong>${p.short}</strong></td><td>500 ml</td>
+        <td>¥${p.cost.toFixed(2)}</td><td>¥${p.price.toFixed(1)}</td>
+        <td>100 瓶</td><td>${reorder} 瓶</td>
+      </tr>`;
+    }).join("");
+
+    const money = n => "¥" + Math.round(n).toLocaleString("zh-CN");
+    function calculate() {
+      const units = Math.max(0, Number(document.getElementById("units").value) || 0);
+      const baseUnits = products.reduce((sum, p) => sum + p.sold, 0);
+      const scale = units / baseUnits;
+      const revenue = products.reduce((sum, p) => sum + p.price * p.sold * scale, 0);
+      const cogs = products.reduce((sum, p) => sum + p.cost * p.sold * scale, 0);
+      const platform = revenue * 0.05;
+      const shipping = units * 1.5;
+      const promo = units * 0.8;
+      const loss = cogs * 0.03;
+      const fixed = 1800;
+      const profit = revenue - cogs - platform - shipping - promo - loss - fixed;
+      const contributionPerUnit = units > 0 ? (revenue - cogs - platform - shipping - promo - loss) / units : 0;
+      const breakEven = contributionPerUnit > 0 ? Math.ceil(fixed / contributionPerUnit) : 0;
+      const setupPayback = profit > 0 ? (2500 / profit).toFixed(1) : "—";
+
+      document.getElementById("revenue").textContent = money(revenue);
+      document.getElementById("profit").textContent = money(profit);
+      document.getElementById("break-even").textContent = "约 " + breakEven + " 瓶";
+      document.getElementById("payback").textContent = profit > 0 ? "约 " + setupPayback + " 个月" : "暂无法回收";
+      document.getElementById("b-revenue").textContent = money(revenue);
+      document.getElementById("b-cogs").textContent = "−" + money(cogs);
+      document.getElementById("b-platform").textContent = "−" + money(platform);
+      document.getElementById("b-shipping").textContent = "−" + money(shipping);
+      document.getElementById("b-promo").textContent = "−" + money(promo);
+      document.getElementById("b-loss").textContent = "−" + money(loss);
+      document.getElementById("b-profit").textContent = money(profit);
+    }
+
+    document.getElementById("units").addEventListener("input", calculate);
+    calculate();
+  </script>
+</body>
+</html>
